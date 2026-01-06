@@ -1,4 +1,4 @@
-# 🚀 Uzay Fiziği Simülasyon Sistemi (C Versiyonu)
+# 🚀 Uzay Fiziği Simülasyon Sistemi (C ve Web Tabanlı Versiyonu)
 
 ## 📋 Proje Hakkında
 
@@ -9,6 +9,10 @@ Bu proje, **Algoritmalar ve Programlama** dersi kapsamında geliştirilmiş **ko
 Bir bilim insanının farklı gezegenlerde fizik kurallarını test etmesini sağlayan interaktif bir simülasyon ortamı oluşturmak ve C programlama dilinde **pointer kullanımı**, **modüler programlama** ve **fizik hesaplamalarını** öğrenmek.
 
 ---
+
+### Proje Gelişimi
+
+Projenin görsel olarakta kontrol edilmesi daha kolay bir yapıda deneyimlenmesi amaçlanarak proje web tabanada C yazım dilindeki sistemler korunarak taşınmıştır.
 
 ## 🎓 Akademik Bilgiler
 
