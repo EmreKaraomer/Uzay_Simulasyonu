@@ -34,7 +34,7 @@ int main() {
     printf("==============================================\n");
     printf("   UZAY FIZIGI SIMULASYON SISTEMI\n");
     printf("==============================================\n\n");
-    printf("Lutfen bilim insaninin adini giriniz: ");
+    printf("Lutfen bilim adaminin adini giriniz: ");
     fgets(bilim_adami, sizeof(bilim_adami), stdin);
     bilim_adami[strcspn(bilim_adami, "\n")] = '\0';
     
