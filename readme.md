@@ -658,7 +658,11 @@ if (secim == -1) {
 ![Sonuçlar](4.png)
 
 ### 5. Kodlar
-![Kodlar] (5.png)
+![Kodlar](5.png)
+![Kodlar](6.png)
+![Kodlar](7.png)
+
+
 
 
 ---
