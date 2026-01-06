@@ -649,7 +649,7 @@ if (secim == -1) {
 ![Program Açılışı](1.png)
 
 ### 2. Ana Menü
-![Ana Menü](2..png)
+![Ana Menü](2.png)
 
 ### 3. Deney Seçimi ve Giriş
 ![Deney Girişi](3.png)
