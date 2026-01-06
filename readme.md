@@ -658,7 +658,8 @@ if (secim == -1) {
 ![Sonuçlar](4.png)
 
 ### 5. Kodlar
-![Kodlar](5.png)
+![Kodlar](5.png) 
+Her deney **ayrı bir fonksiyon** olarak implement edilip giriş karakter oluşturma kısmı tasarlanmıştır.
 ![Kodlar](6.png)
 ![Kodlar](7.png)
 
