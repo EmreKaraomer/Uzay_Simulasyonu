@@ -661,7 +661,9 @@ if (secim == -1) {
 ![Kodlar](5.png) 
 Her deney **ayrı bir fonksiyon** olarak implement edilip giriş karakter oluşturma kısmı tasarlanmıştır.
 ![Kodlar](6.png)
+**Switch-Case** yapısı ile deney seçim menüsü ve -1 girilince programın sonlandırılması kodlanmıştır.
 ![Kodlar](7.png)
+Farklı gezegenlerin fiziki formülleri kodlanmıştır.
 
 
 
