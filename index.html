@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uzay Fiziği Simülasyon Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .name-input-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .name-input-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .name-input-section input {
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .name-input-section input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .menu-section {
+            display: none;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .menu-item h3 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+        .menu-item p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .experiment-section {
+            display: none;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .planet-result {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .planet-result h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .planet-result p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            margin-top: 20px;
+        }
+
+        .scientist-name-display {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .formula-box {
+            background: #fff9e6;
+            border: 2px dashed #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .formula-box code {
+            font-size: 1.1em;
+            color: #d63031;
+            font-family: 'Courier New', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Uzay Fiziği Simülasyon Sistemi</h1>
+            <p>Güneş Sistemindeki Tüm Gezegenlerde Fizik Deneyleri</p>
+        </div>
+
+        <div class="content">
+            <!-- İsim Girişi -->
+            <div class="name-input-section" id="nameInputSection">
+                <h2>Hoş Geldiniz!</h2>
+                <p style="color: #666; margin-bottom: 20px;">Lütfen bilim insanının adını giriniz:</p>
+                <input type="text" id="scientistName" placeholder="İsim Giriniz:" />
+                <br>
+                <button class="btn" onclick="startSimulation()">Simülasyonu Başlat</button>
+            </div>
+
+            <!-- Ana Menü -->
+            <div class="menu-section" id="menuSection">
+                <div class="scientist-name-display" id="scientistDisplay"></div>
+                <h2 style="color: #667eea; text-align: center; margin-bottom: 20px;">Deney Menüsü</h2>
+                
+                <div class="menu-grid">
+                    <div class="menu-item" onclick="selectExperiment(1)">
+                        <h3>1. Serbest Düşme</h3>
+                        <p>Cismin düşme mesafesini hesaplar</p>
+                    </div>
+                    <div class="menu-item" onclick="selectExperiment(2)">
+                        <h3>2. Yukarı Atış</h3>
+                        <p>Maksimum yükseklik hesaplaması</p>
+                    </div>
+                    <div class="menu-item" onclick="selectExperiment(3)">
+                        <h3>3. Ağırlık</h3>
+                        <p>Cismin ağırlığını hesaplar</p>
+                    </div>
+                    <div class="menu-item" onclick="selectExperiment(4)">
+                        <h3>4. Potansiyel Enerji</h3>
+                        <p>Kütleçekimsel enerji hesabı</p>
+                    </div>
+                    <div class="menu-item" onclick="selectExperiment(5)">
+                        <h3>5. Hidrostatik Basınç</h3>
+                        <p>Sıvı basıncı hesaplama</p>
+                    </div>
+                    <div class="menu-item" onclick="selectExperiment(6)">
+                        <h3>6. Kaldırma Kuvveti</h3>
+                        <p>Arşimet prensibi analizi</p>
+                    </div>
+                    <div class="menu-item" onclick="selectExperiment(7)">
+                        <h3>7. Sarkaç Periyodu</h3>
+                        <p>Salınım süresi hesaplama</p>
+                    </div>
+                    <div class="menu-item" onclick="selectExperiment(8)">
+                        <h3>8. İp Gerilmesi</h3>
+                        <p>Gerilme kuvveti analizi</p>
+                    </div>
+                    <div class="menu-item" onclick="selectExperiment(9)">
+                        <h3>9. Asansör</h3>
+                        <p>İvmeli sistemde ağırlık</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deney Bölümü -->
+            <div class="experiment-section" id="experimentSection">
+                <div id="experimentContent"></div>
+                <div class="results" id="results" style="display: none;"></div>
+                <button class="btn back-btn" onclick="backToMenu()">← Ana Menüye Dön</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gezegen verileri
+        const planets = [
+            { name: "Merkür", gravity: 3.7 },
+            { name: "Venüs", gravity: 8.87 },
+            { name: "Dünya", gravity: 9.81 },
+            { name: "Mars", gravity: 3.71 },
+            { name: "Jüpiter", gravity: 24.79 },
+            { name: "Satürn", gravity: 10.44 },
+            { name: "Uranüs", gravity: 8.69 },
+            { name: "Neptün", gravity: 11.15 },
+            { name: "Plüton", gravity: 0.62 }
+        ];
+
+        let scientistName = "";
+
+        function startSimulation() {
+            scientistName = document.getElementById('scientistName').value.trim();
+            if (scientistName === "") {
+                alert("Lütfen bir isim giriniz!");
+                return;
+            }
+            
+            document.getElementById('nameInputSection').style.display = 'none';
+            document.getElementById('menuSection').style.display = 'block';
+            document.getElementById('scientistDisplay').textContent = `${scientistName} - Deney Seçimi`;
+        }
+
+        function backToMenu() {
+            document.getElementById('experimentSection').style.display = 'none';
+            document.getElementById('menuSection').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function selectExperiment(expNum) {
+            document.getElementById('menuSection').style.display = 'none';
+            document.getElementById('experimentSection').style.display = 'block';
+            
+            const experiments = {
+                1: createFreeFallExperiment,
+                2: createUpwardThrowExperiment,
+                3: createWeightExperiment,
+                4: createPotentialEnergyExperiment,
+                5: createHydrostaticPressureExperiment,
+                6: createBuoyancyExperiment,
+                7: createPendulumExperiment,
+                8: createTensionExperiment,
+                9: createElevatorExperiment
+            };
+            
+            experiments[expNum]();
+        }
+
+        function createFreeFallExperiment() {
+            document.getElementById('experimentContent').innerHTML = `
+                <h2 style="color: #667eea;">🌍 Deney 1: Serbest Düşme</h2>
+                <div class="formula-box">
+                    <p><strong>Formül:</strong></p>
+                    <code>h = 0.5 × g × t²</code>
+                </div>
+                <div class="input-group">
+                    <label>Süre (saniye):</label>
+                    <input type="number" id="time" min="0" step="0.01" placeholder="Örn: 5" />
+                </div>
+                <button class="btn" onclick="calculateFreeFall()">Hesapla</button>
+            `;
+        }
+
+        function calculateFreeFall() {
+            let time = parseFloat(document.getElementById('time').value);
+            time = Math.abs(time); // Negatif değeri mutlak değere çevir
+            
+            if (isNaN(time)) {
+                alert("Lütfen geçerli bir değer giriniz!");
+                return;
+            }
+
+            let resultsHTML = `<h3 style="color: #667eea; margin-bottom: 20px;">${time.toFixed(2)} saniye sonraki sonuçlar:</h3>`;
+            
+            planets.forEach(planet => {
+                const distance = 0.5 * planet.gravity * time * time;
+                resultsHTML += `
+                    <div class="planet-result">
+                        <h4>🪐 ${planet.name}</h4>
+                        <p>${time.toFixed(2)} saniye sonra kat edilen mesafe <strong>${distance.toFixed(2)} metre</strong>dir.</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('results').innerHTML = resultsHTML;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function createUpwardThrowExperiment() {
+            document.getElementById('experimentContent').innerHTML = `
+                <h2 style="color: #667eea;">🚀 Deney 2: Yukarı Atış</h2>
+                <div class="formula-box">
+                    <p><strong>Formül:</strong></p>
+                    <code>h_max = v₀² / (2g)</code>
+                </div>
+                <div class="input-group">
+                    <label>Başlangıç Hızı (m/s):</label>
+                    <input type="number" id="velocity" min="0" step="0.01" placeholder="Örn: 20" />
+                </div>
+                <button class="btn" onclick="calculateUpwardThrow()">Hesapla</button>
+            `;
+        }
+
+        function calculateUpwardThrow() {
+            let velocity = parseFloat(document.getElementById('velocity').value);
+            velocity = Math.abs(velocity);
+            
+            if (isNaN(velocity)) {
+                alert("Lütfen geçerli bir değer giriniz!");
+                return;
+            }
+
+            let resultsHTML = `<h3 style="color: #667eea; margin-bottom: 20px;">${velocity.toFixed(2)} m/s hızla atılan cisim:</h3>`;
+            
+            planets.forEach(planet => {
+                const maxHeight = (velocity * velocity) / (2 * planet.gravity);
+                resultsHTML += `
+                    <div class="planet-result">
+                        <h4>🪐 ${planet.name}</h4>
+                        <p>Maksimum çıkabileceği yükseklik <strong>${maxHeight.toFixed(2)} metre</strong>dir.</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('results').innerHTML = resultsHTML;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function createWeightExperiment() {
+            document.getElementById('experimentContent').innerHTML = `
+                <h2 style="color: #667eea;">⚖️ Deney 3: Ağırlık Hesaplama</h2>
+                <div class="formula-box">
+                    <p><strong>Formül:</strong></p>
+                    <code>G = m × g</code>
+                </div>
+                <div class="input-group">
+                    <label>Kütle (kg):</label>
+                    <input type="number" id="mass" min="0" step="0.01" placeholder="Örn: 70" />
+                </div>
+                <button class="btn" onclick="calculateWeight()">Hesapla</button>
+            `;
+        }
+
+        function calculateWeight() {
+            let mass = parseFloat(document.getElementById('mass').value);
+            mass = Math.abs(mass);
+            
+            if (isNaN(mass)) {
+                alert("Lütfen geçerli bir değer giriniz!");
+                return;
+            }
+
+            let resultsHTML = `<h3 style="color: #667eea; margin-bottom: 20px;">${mass.toFixed(2)} kg kütleli cisim:</h3>`;
+            
+            planets.forEach(planet => {
+                const weight = mass * planet.gravity;
+                resultsHTML += `
+                    <div class="planet-result">
+                        <h4>🪐 ${planet.name}</h4>
+                        <p>Cismin ağırlığı <strong>${weight.toFixed(2)} Newton</strong>dur.</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('results').innerHTML = resultsHTML;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function createPotentialEnergyExperiment() {
+            document.getElementById('experimentContent').innerHTML = `
+                <h2 style="color: #667eea;">⚡ Deney 4: Potansiyel Enerji</h2>
+                <div class="formula-box">
+                    <p><strong>Formül:</strong></p>
+                    <code>Ep = m × g × h</code>
+                </div>
+                <div class="input-group">
+                    <label>Kütle (kg):</label>
+                    <input type="number" id="mass" min="0" step="0.01" placeholder="Örn: 10" />
+                </div>
+                <div class="input-group">
+                    <label>Yükseklik (m):</label>
+                    <input type="number" id="height" min="0" step="0.01" placeholder="Örn: 5" />
+                </div>
+                <button class="btn" onclick="calculatePotentialEnergy()">Hesapla</button>
+            `;
+        }
+
+        function calculatePotentialEnergy() {
+            let mass = Math.abs(parseFloat(document.getElementById('mass').value));
+            let height = Math.abs(parseFloat(document.getElementById('height').value));
+            
+            if (isNaN(mass) || isNaN(height)) {
+                alert("Lütfen geçerli değerler giriniz!");
+                return;
+            }
+
+            let resultsHTML = `<h3 style="color: #667eea; margin-bottom: 20px;">${mass.toFixed(2)} kg ve ${height.toFixed(2)} m için:</h3>`;
+            
+            planets.forEach(planet => {
+                const energy = mass * planet.gravity * height;
+                resultsHTML += `
+                    <div class="planet-result">
+                        <h4>🪐 ${planet.name}</h4>
+                        <p>Potansiyel enerji <strong>${energy.toFixed(2)} Joule</strong>dur.</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('results').innerHTML = resultsHTML;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function createHydrostaticPressureExperiment() {
+            document.getElementById('experimentContent').innerHTML = `
+                <h2 style="color: #667eea;">💧 Deney 5: Hidrostatik Basınç</h2>
+                <div class="formula-box">
+                    <p><strong>Formül:</strong></p>
+                    <code>P = ρ × g × h</code>
+                </div>
+                <div class="input-group">
+                    <label>Sıvı Yoğunluğu (kg/m³):</label>
+                    <input type="number" id="density" min="0" step="0.01" placeholder="Örn: 1000" />
+                </div>
+                <div class="input-group">
+                    <label>Derinlik (m):</label>
+                    <input type="number" id="depth" min="0" step="0.01" placeholder="Örn: 10" />
+                </div>
+                <button class="btn" onclick="calculateHydrostaticPressure()">Hesapla</button>
+            `;
+        }
+
+        function calculateHydrostaticPressure() {
+            let density = Math.abs(parseFloat(document.getElementById('density').value));
+            let depth = Math.abs(parseFloat(document.getElementById('depth').value));
+            
+            if (isNaN(density) || isNaN(depth)) {
+                alert("Lütfen geçerli değerler giriniz!");
+                return;
+            }
+
+            let resultsHTML = `<h3 style="color: #667eea; margin-bottom: 20px;">${density.toFixed(2)} kg/m³ ve ${depth.toFixed(2)} m için:</h3>`;
+            
+            planets.forEach(planet => {
+                const pressure = density * planet.gravity * depth;
+                resultsHTML += `
+                    <div class="planet-result">
+                        <h4>🪐 ${planet.name}</h4>
+                        <p>Hidrostatik basınç <strong>${pressure.toFixed(2)} Pascal</strong>dir.</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('results').innerHTML = resultsHTML;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function createBuoyancyExperiment() {
+            document.getElementById('experimentContent').innerHTML = `
+                <h2 style="color: #667eea;">🛟 Deney 6: Kaldırma Kuvveti</h2>
+                <div class="formula-box">
+                    <p><strong>Formül:</strong></p>
+                    <code>Fk = ρ × g × V</code>
+                </div>
+                <div class="input-group">
+                    <label>Sıvı Yoğunluğu (kg/m³):</label>
+                    <input type="number" id="density" min="0" step="0.01" placeholder="Örn: 1000" />
+                </div>
+                <div class="input-group">
+                    <label>Batan Hacim (m³):</label>
+                    <input type="number" id="volume" min="0" step="0.01" placeholder="Örn: 0.5" />
+                </div>
+                <button class="btn" onclick="calculateBuoyancy()">Hesapla</button>
+            `;
+        }
+
+        function calculateBuoyancy() {
+            let density = Math.abs(parseFloat(document.getElementById('density').value));
+            let volume = Math.abs(parseFloat(document.getElementById('volume').value));
+            
+            if (isNaN(density) || isNaN(volume)) {
+                alert("Lütfen geçerli değerler giriniz!");
+                return;
+            }
+
+            let resultsHTML = `<h3 style="color: #667eea; margin-bottom: 20px;">${density.toFixed(2)} kg/m³ ve ${volume.toFixed(2)} m³ için:</h3>`;
+            
+            planets.forEach(planet => {
+                const buoyancy = density * volume * planet.gravity;
+                resultsHTML += `
+                    <div class="planet-result">
+                        <h4>🪐 ${planet.name}</h4>
+                        <p>Kaldırma kuvveti <strong>${buoyancy.toFixed(2)} Newton</strong>dur.</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('results').innerHTML = resultsHTML;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function createPendulumExperiment() {
+            document.getElementById('experimentContent').innerHTML = `
+                <h2 style="color: #667eea;">⏱️ Deney 7: Sarkaç Periyodu</h2>
+                <div class="formula-box">
+                    <p><strong>Formül:</strong></p>
+                    <code>T = 2π × √(L/g)</code>
+                </div>
+                <div class="input-group">
+                    <label>Sarkaç Uzunluğu (m):</label>
+                    <input type="number" id="length" min="0" step="0.01" placeholder="Örn: 2" />
+                </div>
+                <button class="btn" onclick="calculatePendulum()">Hesapla</button>
+            `;
+        }
+
+        function calculatePendulum() {
+            let length = Math.abs(parseFloat(document.getElementById('length').value));
+            
+            if (isNaN(length)) {
+                alert("Lütfen geçerli bir değer giriniz!");
+                return;
+            }
+
+            let resultsHTML = `<h3 style="color: #667eea; margin-bottom: 20px;">${length.toFixed(2)} m uzunluğunda:</h3>`;
+            
+            planets.forEach(planet => {
+                const period = 2 * Math.PI * Math.sqrt(length / planet.gravity);
+                resultsHTML += `
+                    <div class="planet-result">
+                        <h4>🪐 ${planet.name}</h4>
+                        <p>Periyot <strong>${period.toFixed(2)} saniye</strong>dir.</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('results').innerHTML = resultsHTML;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function createTensionExperiment() {
+            document.getElementById('experimentContent').innerHTML = `
+                <h2 style="color: #667eea;">🪢 Deney 8: İp Gerilmesi</h2>
+                <div class="formula-box">
+                    <p><strong>Formül:</strong></p>
+                    <code>T = m × g</code>
+                </div>
+                <div class="input-group">
+                    <label>Asılı Cismin Kütlesi (kg):</label>
+                    <input type="number" id="mass" min="0" step="0.01" placeholder="Örn: 5" />
+                </div>
+                <button class="btn" onclick="calculateTension()">Hesapla</button>
+            `;
+        }
+
+        function calculateTension() {
+            let mass = Math.abs(parseFloat(document.getElementById('mass').value));
+            
+            if (isNaN(mass)) {
+                alert("Lütfen geçerli bir değer giriniz!");
+                return;
+            }
+
+            let resultsHTML = `<h3 style="color: #667eea; margin-bottom: 20px;">${mass.toFixed(2)} kg kütle için:</h3>`;
+            
+            planets.forEach(planet => {
+                const tension = mass * planet.gravity;
+                resultsHTML += `
+                    <div class="planet-result">
+                        <h4>🪐 ${planet.name}</h4>
+                        <p>İp gerilmesi <strong>${tension.toFixed(2)} Newton</strong>dur.</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('results').innerHTML = resultsHTML;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function createElevatorExperiment() {
+            document.getElementById('experimentContent').innerHTML = `
+                <h2 style="color: #667eea;">🛗 Deney 9: Asansör</h2>
+                <div class="formula-box">
+                    <p><strong>Formül:</strong></p>
+                    <code>N = m × (g + a)</code>
+                    <p style="font-size: 0.9em; margin-top: 5px;">a pozitif: yukarı | a negatif: aşağı</p>
+                </div>
+                <div class="input-group">
+                    <label>Kişinin Kütlesi (kg):</label>
+                    <input type="number" id="mass" min="0" step="0.01" placeholder="Örn: 70" />
+                </div>
+                <div class="input-group">
+                    <label>Asansör İvmesi (m/s²):</label>
+                    <input type="number" id="acceleration" step="0.01" placeholder="Örn: 2 veya -2" />
+                </div>
+                <button class="btn" onclick="calculateElevator()">Hesapla</button>
+            `;
+        }
+
+        function calculateElevator() {
+            let mass = Math.abs(parseFloat(document.getElementById('mass').value));
+            let acceleration = parseFloat(document.getElementById('acceleration').value);
+            
+            if (isNaN(mass) || isNaN(acceleration)) {
+                alert("Lütfen geçerli değerler giriniz!");
+                return;
+            }
+
+            let resultsHTML = `<h3 style="color: #667eea; margin-bottom: 20px;">${mass.toFixed(2)} kg ve ${acceleration.toFixed(2)} m/s² için:</h3>`;
+            
+            planets.forEach(planet => {
+                const apparentWeight = mass * (planet.gravity + acceleration);
+                resultsHTML += `
+                    <div class="planet-result">
+                        <h4>🪐 ${planet.name}</h4>
+                        <p>Etkin ağırlık <strong>${apparentWeight.toFixed(2)} Newton</strong>dur.</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('results').innerHTML = resultsHTML;
+            document.getElementById('results').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
